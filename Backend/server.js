@@ -46,6 +46,54 @@ app.post('/products', upload.single('image'), async (req, res) => {
 
 
 
+app.put('/products/:name', upload.single('image'), async (req, res) => {
+  try {
+    const { name, price, category } = req.body;
+
+    const product = await Product.findOne({ name: req.params.name });
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    let imageUrl = product.imageUrl;
+
+    if (req.file) {
+      const getPublicId = (url) => {
+        const urlParts = url.split('/');
+        const fileWithExt = urlParts.pop();
+        const fileName = fileWithExt.substring(0, fileWithExt.lastIndexOf('.'));
+
+        const uploadIndex = urlParts.indexOf('upload');
+        const publicIdParts = urlParts.slice(uploadIndex + 1);
+        if (publicIdParts[0].startsWith('v') && !isNaN(publicIdParts[0].substring(1))) {
+          publicIdParts.shift();
+        }
+
+        return [...publicIdParts, fileName].join('/');
+      };
+
+      const publicId = getPublicId(product.imageUrl);
+      await cloudinary.uploader.destroy(publicId);
+
+      imageUrl = req.file.path;
+    }
+
+    product.name = name;
+    product.price = price;
+    product.category = category;
+    product.imageUrl = imageUrl;
+
+    const updatedProduct = await product.save();
+    res.json({ message: 'Product updated successfully', updatedProduct });
+
+  } catch (error) {
+    console.error('Update error:', error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
+
 app.delete('/products/:name', async (req, res) => {
   try {
     const product = await Product.findOne({ name: req.params.name });
