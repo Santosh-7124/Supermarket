@@ -8,6 +8,7 @@ function AddItem({ API_BASE, fetchProducts }) {
     category: "",
     image: null,
   });
+  const [imagePreview, setImagePreview] = useState(null); // 👈 preview state
   const fileInputRef = useRef(null);
   const [isAdding, setIsAdding] = useState(false);
 
@@ -20,10 +21,14 @@ function AddItem({ API_BASE, fetchProducts }) {
   };
 
   const handleImageChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      image: e.target.files[0],
-    }));
+    const file = e.target.files[0];
+    if (file) {
+      setFormData((prev) => ({
+        ...prev,
+        image: file,
+      }));
+      setImagePreview(URL.createObjectURL(file)); // 👈 generate preview URL
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -46,6 +51,7 @@ function AddItem({ API_BASE, fetchProducts }) {
 
       if (response.ok) {
         setFormData({ name: "", price: "", category: "", image: null });
+        setImagePreview(null); // 👈 clear preview
         if (fileInputRef.current) fileInputRef.current.value = null;
         alert("New Item Added Successfully");
         fetchProducts();
@@ -56,6 +62,7 @@ function AddItem({ API_BASE, fetchProducts }) {
       setIsAdding(false);
     }
   };
+
   return (
     <>
       <h2>Add New Product</h2>
@@ -85,6 +92,23 @@ function AddItem({ API_BASE, fetchProducts }) {
           onChange={handleChange}
           required
         />
+
+        <div
+          style={{
+            width: "100px",
+            height: "100px",
+            background: "grey",
+          }}
+        >
+          {imagePreview && (
+            <img
+              src={imagePreview}
+              alt="Preview"
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
+          )}
+        </div>
+
         <input
           type="file"
           name="image"
@@ -92,6 +116,7 @@ function AddItem({ API_BASE, fetchProducts }) {
           onChange={handleImageChange}
           ref={fileInputRef}
         />
+
         <button type="submit" disabled={isAdding}>
           {isAdding ? "Adding..." : "Add Product"}
         </button>
