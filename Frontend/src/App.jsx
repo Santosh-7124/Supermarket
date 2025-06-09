@@ -11,13 +11,18 @@ function App() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    fetch(`${API_BASE}/ping`).catch((err) =>
+      console.error("Ping failed:", err)
+    );
+  }, []);
+
   const fetchProducts = async () => {
     setLoading(true);
     try {
       const response = await fetch(`${API_BASE}/products`);
       const data = await response.json();
       setProducts(data);
-      console.log(data);
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {
@@ -68,12 +73,6 @@ function App() {
       </Routes>
       <ItemList products={products} loading={loading} />
     </BrowserRouter>
-    // <div>
-    //   <AddItem fetchProducts={fetchProducts} API_BASE={API_BASE} />
-    //   <ItemList products={products} loading={loading} />
-    //   <UpdateItem fetchProducts={fetchProducts} API_BASE={API_BASE} />
-    //   <DeleteItem fetchProducts={fetchProducts} API_BASE={API_BASE} />
-    // </div>
   );
 }
 

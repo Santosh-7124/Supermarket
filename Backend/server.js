@@ -29,7 +29,7 @@ const productSchema = new mongoose.Schema({
 const Product = mongoose.model('Product', productSchema);
 
 
-
+// Add Product
 app.post('/products', upload.single('image'), async (req, res) => {
   try {
     const { name, price, category } = req.body;
@@ -45,7 +45,7 @@ app.post('/products', upload.single('image'), async (req, res) => {
 });
 
 
-
+// Update Product
 app.put('/products/:name', upload.single('image'), async (req, res) => {
   try {
     const { name, price, category } = req.body;
@@ -93,7 +93,7 @@ app.put('/products/:name', upload.single('image'), async (req, res) => {
 });
 
 
-
+// Delete Product
 app.delete('/products/:name', async (req, res) => {
   try {
     const product = await Product.findOne({ name: req.params.name });
@@ -129,7 +129,7 @@ app.delete('/products/:name', async (req, res) => {
 });
 
 
-
+// Fetch Products
 app.get('/products', async (req, res) => {
   try {
     const products = await Product.find();
@@ -139,6 +139,11 @@ app.get('/products', async (req, res) => {
   }
 });
 
+
+// Cold start server
+app.get("/ping", (req, res) => {
+  res.status(200).send("pong");
+});
 
 
 app.listen(PORT, () => {
