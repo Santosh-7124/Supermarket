@@ -18,10 +18,13 @@ function ItemList({ products, loading }) {
                     <img src={item.imageUrl} alt={item.name} width="100" />
                   )}
                 </div>
-
-                <p>
-                  {item.name} costs {item.price}₹ Category: {item.category}
-                </p>
+                <div className="item-set-info">
+                  <div className="item-set-text">
+                    <h3>{item.name}</h3>
+                    <span> {item.category}</span>
+                  </div>
+                  <p> {item.price} Rs.</p>
+                </div>
               </div>
             ))}
           </>

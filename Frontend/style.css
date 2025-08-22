@@ -388,7 +388,8 @@ h2 {
 
 .item-set-img {
   width: 100%;
-  height: 100%;
+  aspect-ratio: 1/1;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -396,9 +397,41 @@ h2 {
 
 .item-set-img img {
   width: 100%;
-  aspect-ratio: 1/1;
+  height: 100%;
   object-fit: cover;
   border-radius: 4px;
   overflow: hidden;
-  border: 1px solid #121212;
+  border: 2px solid #121212;
+}
+
+.item-set-info {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+h3 {
+  color: #121212;
+  font-family: "Sora";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+}
+
+.item-set-info p {
+  color: #121212;
+  font-family: "Sora";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 32px;
+}
+
+.item-set-info span {
+  color: #5e5e5e;
+  font-family: "Sora";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
 }
