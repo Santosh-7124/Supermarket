@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
+import ClickSound from "/mouse_click_sound.mp3";
 
 function AddItem({ API_BASE, fetchProducts }) {
   const [formData, setFormData] = useState({
@@ -8,7 +9,7 @@ function AddItem({ API_BASE, fetchProducts }) {
     category: "",
     image: null,
   });
-  const [imagePreview, setImagePreview] = useState(null); // 👈 preview state
+  const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
   const [isAdding, setIsAdding] = useState(false);
 
@@ -27,9 +28,11 @@ function AddItem({ API_BASE, fetchProducts }) {
         ...prev,
         image: file,
       }));
-      setImagePreview(URL.createObjectURL(file)); // 👈 generate preview URL
+      setImagePreview(URL.createObjectURL(file));
     }
   };
+
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,21 +54,26 @@ function AddItem({ API_BASE, fetchProducts }) {
 
       if (response.ok) {
         setFormData({ name: "", price: "", category: "", image: null });
-        setImagePreview(null); // 👈 clear preview
+        setImagePreview(null);
         if (fileInputRef.current) fileInputRef.current.value = null;
-        alert("New Item Added Successfully");
+        setSuccessMessage("New Item Added Successfully!");
         fetchProducts();
       }
     } catch (error) {
       console.error("Error adding product:", error);
+      setSuccessMessage("Failed to add product!");
     } finally {
       setIsAdding(false);
     }
   };
 
+  function handleButtonClick() {
+    const clickSound = new Audio(ClickSound);
+    clickSound.play();
+  }
+
   return (
     <>
-      <h2>Add New Product</h2>
       <form onSubmit={handleSubmit} encType="multipart/form-data">
         <input
           type="text"
@@ -76,14 +84,19 @@ function AddItem({ API_BASE, fetchProducts }) {
           required
           autoComplete="on"
         />
+
         <input
           type="number"
           name="price"
           placeholder="Price"
           value={formData.price}
           onChange={handleChange}
+          min="0"
+          step="any"
           required
+          className="price-input"
         />
+
         <input
           type="text"
           name="category"
@@ -94,18 +107,20 @@ function AddItem({ API_BASE, fetchProducts }) {
         />
 
         <div
-          style={{
-            width: "100px",
-            height: "100px",
-            background: "grey",
-          }}
+          className="image-input"
+          onClick={() => fileInputRef.current.click()}
         >
-          {imagePreview && (
-            <img
-              src={imagePreview}
-              alt="Preview"
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
+          {imagePreview ? (
+            <div className="image-input-img">
+              <img
+                src={imagePreview}
+                alt="Preview"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+              <p>Click on image to change</p>
+            </div>
+          ) : (
+            <span>Upload Product Image</span>
           )}
         </div>
 
@@ -115,12 +130,30 @@ function AddItem({ API_BASE, fetchProducts }) {
           accept=".jpg, .jpeg, .png"
           onChange={handleImageChange}
           ref={fileInputRef}
+          style={{ display: "none" }}
         />
 
-        <button type="submit" disabled={isAdding}>
+        <button type="submit" disabled={isAdding} onClick={handleButtonClick}>
           {isAdding ? "Adding..." : "Add Product"}
         </button>
       </form>
+      {successMessage && (
+        <div className="alert">
+          <div className="alert-container">
+            <p>{successMessage}</p>
+            <div className="alert-container-buttons">
+              <button
+                onClick={() => {
+                  setSuccessMessage("");
+                  handleButtonClick();
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

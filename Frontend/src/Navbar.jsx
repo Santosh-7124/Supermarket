@@ -1,13 +1,30 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function Navbar() {
   return (
-    <header style={{ padding: "20px", border: "1px solid #121212" }}>
-      <nav style={{ display: "flex", gap: "40px" }}>
-        <Link to="/add">Add</Link>
-        <Link to="/update">Update</Link>
-        <Link to="/delete">Delete</Link>
+    <header>
+      <nav>
+        <NavLink
+          to="/add"
+          className={({ isActive }) => (isActive ? "active-nav-link" : "")}
+        >
+          Add
+        </NavLink>
+
+        <NavLink
+          to="/update"
+          className={({ isActive }) => (isActive ? "active-nav-link" : "")}
+        >
+          Update
+        </NavLink>
+
+        <NavLink
+          to="/delete"
+          className={({ isActive }) => (isActive ? "active-nav-link" : "")}
+        >
+          Delete
+        </NavLink>
       </nav>
     </header>
   );

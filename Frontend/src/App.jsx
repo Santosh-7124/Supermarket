@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 import ItemList from "./components/ItemList";
 import AddItem from "./components/AddItem";
@@ -36,29 +36,24 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Navbar />
-      <Routes>
-        <Route path="/">
+      <div className="app-left">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Navigate to="/add" replace />} />
           <Route
-            index
+            path="/add"
             element={
               <AddItem fetchProducts={fetchProducts} API_BASE={API_BASE} />
             }
           />
           <Route
-            path="add"
-            element={
-              <AddItem fetchProducts={fetchProducts} API_BASE={API_BASE} />
-            }
-          />
-          <Route
-            path="update"
+            path="/update"
             element={
               <UpdateItem fetchProducts={fetchProducts} API_BASE={API_BASE} />
             }
           />
           <Route
-            path="delete"
+            path="/delete"
             element={
               <DeleteItem fetchProducts={fetchProducts} API_BASE={API_BASE} />
             }
@@ -69,8 +64,8 @@ function App() {
               <AddItem fetchProducts={fetchProducts} API_BASE={API_BASE} />
             }
           />
-        </Route>
-      </Routes>
+        </Routes>
+      </div>
       <ItemList products={products} loading={loading} />
     </BrowserRouter>
   );
