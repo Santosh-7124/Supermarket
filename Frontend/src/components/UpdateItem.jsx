@@ -182,16 +182,15 @@ function UpdateItem({ API_BASE, fetchProducts }) {
             ref={fileInputRef}
             style={{ display: "none" }}
           />
-
-          <button onClick={handleCancel} className="cancel-btn">
-            Cancel
-          </button>
           <button
             type="submit"
             disabled={isUpdating}
             onClick={handleButtonClick}
           >
             {isUpdating ? "Updating..." : "Update Item"}
+          </button>
+          <button onClick={handleCancel} className="cancel-btn">
+            Cancel
           </button>
         </form>
       )}

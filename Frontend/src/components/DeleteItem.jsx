@@ -108,15 +108,14 @@ function DeleteItem({ API_BASE, fetchProducts }) {
               />
             </div>
           </div>
-
-          <button type="button" onClick={handleCancel} className="cancel-btn">
-            Cancel
-          </button>
           <button
             type="submit"
             disabled={isDeleting}
             onClick={handleButtonClick}
           >
+            <button type="button" onClick={handleCancel} className="cancel-btn">
+              Cancel
+            </button>
             {isDeleting ? "Deleting..." : "Delete Item"}
           </button>
         </form>
